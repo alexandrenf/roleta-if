@@ -14,7 +14,7 @@ const defaultPrizes = {
   caneta: 15,
   caderno: 7,
   kit:3,
-  tentenovamente: Infinity, // Always available
+  tentenovamente: 1, // Always available
 };
 
 const loadPrizesFromCookies = () => {
