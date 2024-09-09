@@ -44,7 +44,7 @@ const SpinButton = styled.button`
 const PrizeMessage = styled.h2`
   margin-top: 30px;
   font-size: 26px;
-  color: #333;
+  color: #fff;
   text-align: center;
   transition: opacity 0.3s ease;
   opacity: ${(props) => (props.show ? 1 : 0)};
