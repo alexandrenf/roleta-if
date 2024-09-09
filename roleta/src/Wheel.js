@@ -7,13 +7,12 @@ import Particles from 'react-tsparticles';
 // Styled components for layout with a modern look
 const WheelContainer = styled.div`
   display: flex;
+  background-color: #014f8c;
   flex-direction: column;
   align-items: center;
   margin: 20px 0;
-  background: linear-gradient(135deg, #f6f9fc, #e9efff);
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 `;
 
 const SpinButton = styled.button`
@@ -60,7 +59,6 @@ const WheelContainerHeader = styled.h1`
 
 // Data array with alternating colors for each prize option
 const alternatingColors = [
-  { backgroundColor: '#014F8C', textColor: '#ffffff' }, // Blue with white text
   { backgroundColor: '#00963C', textColor: '#ffffff' }, // Green with white text
   { backgroundColor: '#FAC800', textColor: '#000000' }  // Yellow with black text
 ];
@@ -75,8 +73,8 @@ const data = [
 ].map((item, index) => ({
   ...item,
   style: {
-    backgroundColor: alternatingColors[index % 3].backgroundColor,
-    textColor: alternatingColors[index % 3].textColor,
+    backgroundColor: alternatingColors[index % 2].backgroundColor,
+    textColor: alternatingColors[index % 2].textColor,
   }
 }));
 
@@ -182,8 +180,8 @@ export const WheelComponent = ({ onReset }) => {
         onStopSpinning={handleSpinEnd}
         backgroundColors={['#014F8C', '#00963C', '#FAC800']}
         textColors={['#ffffff', '#ffffff', '#000000']}
-        outerBorderColor={'#000'}
-        outerBorderWidth={5}
+        outerBorderColor={'#f0f0f0'}
+        outerBorderWidth={4}
         radiusLineColor={'#ddd'}
         radiusLineWidth={2}
         fontFamily={'Arial'}

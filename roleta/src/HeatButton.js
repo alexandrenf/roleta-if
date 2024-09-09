@@ -11,9 +11,9 @@ const GearIconContainer = styled.div`
   right: 20px;
   cursor: pointer;
   font-size: 30px;
-  color: #f44336;
+  color: #fac800;
   &:hover {
-    color: #e53935;
+    color: #00c800;
   }
   &:disabled {
     color: #ccc;
@@ -23,7 +23,7 @@ const GearIconContainer = styled.div`
 
 const ModalContainer = styled.div`
   position: fixed;
-  top: 50%;
+  top: 50%
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
