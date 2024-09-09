@@ -74,10 +74,11 @@ export const Checkboxes = ({ onReadyToSpin }) => {
     insta1: false,
     insta2: false,
     insta3: false,
+    insta4: false,
   });
 
   // Check if all checkboxes are selected
-  const allChecked = checkboxes.insta1 && checkboxes.insta2 && checkboxes.insta3;
+  const allChecked = checkboxes.insta1 && checkboxes.insta2 && checkboxes.insta3 && checkboxes.insta4;
 
   // Handle checkbox change event
   const handleChange = (e) => {
@@ -112,6 +113,15 @@ export const Checkboxes = ({ onReadyToSpin }) => {
           onChange={handleChange} 
         />
         Estou seguindo @ifmsabrazilexchanges no Instagram
+      </Label>
+
+      <Label>
+        <CheckboxInput 
+          type="checkbox" 
+          name="insta4" 
+          onChange={handleChange} 
+        />
+        Estou seguindo @bmsjournal no Instagram
       </Label>
 
       {/* Ready to Spin button */}
