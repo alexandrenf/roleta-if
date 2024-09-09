@@ -52,6 +52,9 @@ const ReadyButton = styled.button`
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 
   &:disabled {
     background-color: #ccc;
@@ -63,6 +66,7 @@ const ReadyButton = styled.button`
     background-color: #45a049;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
   }
+
 `;
 
 export const Checkboxes = ({ onReadyToSpin }) => {
