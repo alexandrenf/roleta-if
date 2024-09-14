@@ -1,3 +1,4 @@
+// WheelComponent.js
 import React, { useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
 import styled from 'styled-components';
@@ -50,34 +51,12 @@ const PrizeMessage = styled.h2`
   opacity: ${(props) => (props.show ? 1 : 0)};
 `;
 
-const WheelContainerHeader = styled.h1`
-  font-size: 36px;
-  margin-bottom: 20px;
-  color: #2c3e50;
-  text-align: center;
-`;
-
-// Data array with alternating colors for each prize option
 const alternatingColors = [
   { backgroundColor: '#00963C', textColor: '#ffffff' }, // Green with white text
   { backgroundColor: '#FAC800', textColor: '#000000' }  // Yellow with black text
 ];
 
-const data = [
-  { option: 'Bag' },
-  { option: 'Copo' },
-  { option: 'Caneta' },
-  { option: 'Caderno' },
-  { option: 'Kit' },
-  { option: 'Tente Novamente' }
-].map((item, index) => ({
-  ...item,
-  style: {
-    backgroundColor: alternatingColors[index % 2].backgroundColor,
-    textColor: alternatingColors[index % 2].textColor,
-  }
-}));
-
+// Wheel Component
 export const WheelComponent = ({ onReset }) => {
   const { prizes, decreasePrizeCount } = usePrize();
   const [mustSpin, setMustSpin] = useState(false);
@@ -85,76 +64,44 @@ export const WheelComponent = ({ onReset }) => {
   const [wonPrize, setWonPrize] = useState('');
   const [showParticles, setShowParticles] = useState(false);
 
-  const calculatePrizeWeights = () => {
-    let availablePrizes = [];
-    let totalStock = 0;
+  // Function to get filtered prizes and alternate colors dynamically
+  const getFilteredPrizes = () => {
+    const prizeEntries = Object.entries(prizes)
+      .filter(([prizeKey, quantity]) => quantity > 0 && prizeKey !== 'tenteNovamente') // Filter prizes with stock
+      .map(([prizeKey], index) => ({
+        option: prizeKey.charAt(0).toUpperCase() + prizeKey.slice(1), // Capitalize first letter
+        style: {
+          backgroundColor: alternatingColors[index % 2].backgroundColor, // Apply alternating colors based on the index of filtered prizes
+          textColor: alternatingColors[index % 2].textColor,
+        }
+      }));
 
-    // Calculate the total stock for available prizes
-    Object.keys(prizes).forEach((key) => {
-      if (key !== 'tenteNovamente' && prizes[key] > 0) {
-        totalStock += prizes[key];
+    return [
+      ...prizeEntries,
+      {
+        option: 'Tente Novamente',
+        style: { backgroundColor: '#FAC800', textColor: '#000000' } // 'Tente Novamente' option
       }
-    });
-
-    // If no stock, fallback to "Tente Novamente"
-    if (totalStock === 0) {
-      return [{ option: 'Tente Novamente', weight: 1.0 }];
-    }
-
-    // Assign weights based on stock ratio and ensure "Tente Novamente" is always included with 10% weight
-    Object.entries(prizes).forEach(([prizeKey, quantity]) => {
-      if (prizeKey === 'tenteNovamente') {
-        availablePrizes.push({ option: 'Tente Novamente', weight: 0.1 });
-      } else if (quantity > 0) {
-        const weight = (quantity / totalStock) * 0.9; // Distribute remaining 90% among real prizes
-        availablePrizes.push({ option: prizeKey, weight });
-      }
-    });
-
-    return availablePrizes;
-  };
-
-  const getRandomPrize = (weightedPrizes) => {
-    const randomNumber = Math.random();
-    let accumulatedWeight = 0;
-
-    for (let i = 0; i < weightedPrizes.length; i++) {
-      accumulatedWeight += weightedPrizes[i].weight;
-      if (randomNumber <= accumulatedWeight) {
-        return weightedPrizes[i].option;
-      }
-    }
-
-    return 'Tente Novamente';
+    ];
   };
 
   const handleSpinClick = () => {
-    const weightedPrizes = calculatePrizeWeights();
-    const selectedPrize = getRandomPrize(weightedPrizes);
-
-    const originalIndex = data.findIndex(
-      (prize) => prize.option.toLowerCase().replace(' ', '') === selectedPrize.toLowerCase().replace(' ', '')
-    );
-
-    if (originalIndex === -1) {
-      return;
-    }
-
-    setPrizeIndex(originalIndex);
+    const filteredPrizes = getFilteredPrizes();
+    const randomIndex = Math.floor(Math.random() * filteredPrizes.length);
+    setPrizeIndex(randomIndex);
     setMustSpin(true);
   };
 
   const handleSpinEnd = () => {
-    const won = data[prizeIndex]?.option || 'Tente Novamente';
+    const won = getFilteredPrizes()[prizeIndex]?.option || 'Tente Novamente';
     setWonPrize(won);
+
     if (won !== 'Tente Novamente') {
-      decreasePrizeCount(won.replace(' ', '').toLowerCase());
+      decreasePrizeCount(won.toLowerCase());
     }
     setMustSpin(false);
     setShowParticles(true);
-    setTimeout(() => {
-      setShowParticles(false);
-    }, 3000);
+    setTimeout(() => setShowParticles(false), 3000);
   };
 
   return (
@@ -176,7 +123,7 @@ export const WheelComponent = ({ onReset }) => {
       <Wheel
         mustStartSpinning={mustSpin}
         prizeNumber={prizeIndex}
-        data={data}
+        data={getFilteredPrizes()} // Use filtered prizes
         onStopSpinning={handleSpinEnd}
         backgroundColors={['#014F8C', '#00963C', '#FAC800']}
         textColors={['#ffffff', '#ffffff', '#000000']}
