@@ -1,7 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create a new user submission
+// Create a new user submission or return existing user
 export const createUser = mutation({
   args: {
     name: v.string(),
@@ -15,7 +15,8 @@ export const createUser = mutation({
       .first();
     
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      // Return existing user ID to allow multiple spins
+      return existingUser._id;
     }
     
     // Create new user
